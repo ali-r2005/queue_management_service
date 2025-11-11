@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum QueueUserStatus {
+  waiting
+  late
+  serving
+}
+
+model Queue {
+  id             Int              @id @default(autoincrement())
+  branch_id      Int
+  business_id    Int
+  user_id        Int
+  name           String
+  scheduled_date DateTime
+  is_active      Boolean          @default(true)
+  start_time     DateTime?
+
+  // relations
+  queueUsers      QueueUser[]
+  servedCustomers ServedCustomer[]
+  latecomerQueues LatecomerQueue[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model QueueUser {
+  id            Int             @id @default(autoincrement())
+  queue_id      Int
+  user_id       Int
+  position      Int
+  status        QueueUserStatus @default(waiting)
+  ticket_number String?
+  late_at       DateTime?
+
+  // relation (local only)
+  queue Queue @relation(fields: [queue_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ServedCustomer {
+  id           Int      @id @default(autoincrement())
+  queue_id     Int
+  user_id      Int
+  waiting_time Int      // seconds
+
+  // relation (local only)
+  queue Queue @relation(fields: [queue_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LatecomerQueue {
+  id        Int                 @id @default(autoincrement())
+  queue_id  Int
+  queue     Queue               @relation(fields: [queue_id], references: [id])
+  users     LatecomerQueueUser[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LatecomerQueueUser {
+  id                 Int              @id @default(autoincrement())
+  user_id            Int
+  latecomerQueue_id  Int
+  latecomerQueue     LatecomerQueue   @relation(fields: [latecomerQueue_id], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

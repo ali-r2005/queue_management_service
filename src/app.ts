@@ -1,14 +1,15 @@
 import express from "express";
-import "module-alias/register";
 import { errorHandler } from "@/middlewares/error.middleware";
+import authMiddleware from "@/middlewares/auth.middleware";
 import dotenv from "dotenv";
+import queueRoutes from "./routes/queue.routes";
 
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
-// app.use("/api/users", userRoutes);
+app.use("/api/queues", authMiddleware, queueRoutes);
 
 // Central error handling
 app.use(errorHandler);
