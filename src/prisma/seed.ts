@@ -1,23 +1,8 @@
 import { PrismaClient } from "@/generated/prisma/client";
 import { MyUserPayload } from "@/types/jwt";
+import { userStaff, businessId, branchId } from "@/types/user";
 
 const prisma = new PrismaClient();
-
-// Example data for business owner, branch manager, staff
-  const businessOwnerId = 1;
-  const branchManagerId = 2;
-  const staffId = 3;
-  const branchId = 10;
-  const businessId = 100;
-
-export const userStaff: MyUserPayload = {
-  id: staffId,
-  username: "ali",
-  email: "ali@gmail.com",
-  role: "staff",
-  business_id: businessId,
-  branch_id: branchId
-}
 
 async function main() {
   console.log("🌱 Seeding database...");

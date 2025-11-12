@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { MyUserPayload } from "@/types/jwt";
-import { userStaff } from "@/prisma/seed";
+import { userStaff } from "@/types/user";
 
 export default function authMiddleware (req: Request, res: Response, next: NextFunction) {
     // const authHeader = req.headers.authorization;
