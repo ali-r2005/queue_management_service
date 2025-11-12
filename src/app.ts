@@ -3,6 +3,7 @@ import { errorHandler } from "@/middlewares/error.middleware";
 import authMiddleware from "@/middlewares/auth.middleware";
 import dotenv from "dotenv";
 import queueRoutes from "./routes/queue.routes";
+import logger from "./utils/logger";
 
 dotenv.config();
 
@@ -17,6 +18,6 @@ app.use(errorHandler);
 app.listen(
     process.env.PORT,
     () => {
-        console.log(`Server is running on port ${process.env.PORT}`);
+        logger.info(`Server is running on port ${process.env.PORT}`);
     }
 )

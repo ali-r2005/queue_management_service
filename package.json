@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/app.ts",
     "start": "ts-node --files -r tsconfig-paths/register src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "serve": "node dist/app.js"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +18,9 @@
     "@prisma/client": "^6.19.0",
     "axios": "^1.13.2",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "pino": "^10.1.0",
+    "pino-pretty": "^13.1.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.5",
