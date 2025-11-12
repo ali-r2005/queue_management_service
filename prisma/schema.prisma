@@ -26,8 +26,8 @@ model Queue {
   business_id    Int
   user_id        Int
   name           String
-  scheduled_date DateTime
-  is_active      Boolean          @default(true)
+  scheduled_date DateTime?
+  is_active      Boolean          @default(false)
   start_time     DateTime?
 
   // relations
