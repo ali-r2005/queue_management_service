@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "_moduleAliases": {
-    "@": "src"
-  },
   "scripts": {
-    "start": "ts-node -r tsconfig-paths/register src/app.ts",
+    "start": "ts-node --files -r tsconfig-paths/register src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -16,7 +16,7 @@
     "forceConsistentCasingInFileNames": true,
 
     /* === Node Types === */
-    "types": ["node"],
+    "types": ["node"],  
     "lib": ["ESNext"],
 
     /* === Type Safety === */
@@ -26,6 +26,6 @@
     /* === Source Maps for Debugging === */
     "sourceMap": true
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
