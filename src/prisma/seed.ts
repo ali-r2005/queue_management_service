@@ -38,14 +38,14 @@ async function main() {
     data: [
       {
         queue_id: queue1.id,
-        user_id: 4,
+        customer_id: 4,
         position: 1,
         status: "waiting",
         ticket_number: "T001",
       },
       {
         queue_id: queue2.id,
-        user_id: 9,
+        customer_id: 9,
         position: 1,
         status: "waiting",
         ticket_number: "T002",
@@ -57,7 +57,7 @@ async function main() {
   await prisma.servedCustomer.create({
     data: {
       queue_id: queue1.id,
-      user_id: 5,
+      customer_id: 5,
       waiting_time: 120, // seconds
     },
   });
@@ -72,7 +72,7 @@ async function main() {
   await prisma.latecomerQueueUser.create({
     data: {
       latecomerQueue_id: lateQueue.id,
-      user_id: 67,
+      customer_id: 67,
     },
   });
 

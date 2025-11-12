@@ -15,4 +15,12 @@ export type AddCustomerToQueue = {
     queue_id: number;
     customer_id: number;
 }
+
+export type CreateQueueUser = {
+    queue_id: number;
+    customer_id: number;
+    position : number;
+    ticket_number: string;
+    late_at?: Date | string;
+}
     

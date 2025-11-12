@@ -45,7 +45,7 @@ model QueueUser {
   customer_id   Int
   position      Int
   status        QueueUserStatus @default(waiting)
-  ticket_number String?
+  ticket_number String
   late_at       DateTime?
 
   // relation (local only)
