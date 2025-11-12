@@ -42,7 +42,7 @@ model Queue {
 model QueueUser {
   id            Int             @id @default(autoincrement())
   queue_id      Int
-  user_id       Int
+  customer_id   Int
   position      Int
   status        QueueUserStatus @default(waiting)
   ticket_number String?
@@ -58,7 +58,7 @@ model QueueUser {
 model ServedCustomer {
   id           Int      @id @default(autoincrement())
   queue_id     Int
-  user_id      Int
+  customer_id  Int
   waiting_time Int      // seconds
 
   // relation (local only)
@@ -80,7 +80,7 @@ model LatecomerQueue {
 
 model LatecomerQueueUser {
   id                 Int              @id @default(autoincrement())
-  user_id            Int
+  customer_id            Int
   latecomerQueue_id  Int
   latecomerQueue     LatecomerQueue   @relation(fields: [latecomerQueue_id], references: [id])
 

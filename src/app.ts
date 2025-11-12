@@ -2,7 +2,7 @@ import express from "express";
 import { errorHandler } from "@/middlewares/error.middleware";
 import authMiddleware from "@/middlewares/auth.middleware";
 import dotenv from "dotenv";
-import queueRoutes from "./routes/queue.routes";
+import queueCrudRoutes from "./routes/queueCrud.routes";
 import logger from "./utils/logger";
 
 dotenv.config();
@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use("/api/queues", authMiddleware, queueRoutes);
+app.use("/api/queues", authMiddleware, queueCrudRoutes);
 
 // Central error handling
 app.use(errorHandler);

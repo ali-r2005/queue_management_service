@@ -1,7 +1,7 @@
 import prisma from "@/config/prismaClient";
 import { CreateQueue, queue } from "@/types/queue";
 
-export const queueRepository = {  
+export const queueRepositoryCrud = {  
     getQueuesByCondition : async (condition: any) => {
         const queues = await prisma.queue.findMany(condition);
         return queues;

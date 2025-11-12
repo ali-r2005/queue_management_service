@@ -11,4 +11,8 @@ export type CreateQueue = queue & {
     user_id: number;
 }
 
+export type AddCustomerToQueue = {
+    queue_id: number;
+    customer_id: number;
+}
     
