@@ -2,9 +2,11 @@ import prisma from "@/config/prismaClient";
 
 export default async function adjustPositions(queueId: number): Promise<void> {
     const users = await prisma.queueCustomer.findMany({
-        where: { queue_id: queueId },
+        where: { queue_id: queueId , position: { not: null } },
         orderBy: [{ position: "asc" }],
     });
+
+    console.log("users", users);
 
     const updates = [] as ReturnType<typeof prisma.queueCustomer.update>[];
     for (let i = 0; i < users.length; i++) {

@@ -5,14 +5,15 @@ import adjustPositions from "../utils/adjustPositions";
 
 export const queueManagementService = {
     addCustomerToQueue: async (customer: AddCustomerToQueue) => {
-        const queue = await queueRepository.getFirstQueueUserByCondition({ where: { queue_id: customer.queue_id }, orderBy: { position: "desc" } });
+        const queue = await queueRepository.getFirstQueueUserByCondition({ where: { queue_id: customer.queue_id, position: { not: null } }, orderBy: { position: "desc" } });
         console.log("queue",queue);
         let position;
         if (!queue) {
             position = 1;
         }
         else {
-            position = queue.position + 1;
+            const queuePosition = queue.position as number;
+            position = queuePosition + 1;
         }
         const ticketNumber = `T-${crypto.randomBytes(3).toString('hex').substring(0, 4).toUpperCase()}`;
         const queueUser = await queueRepository.createQueueUser({
@@ -21,7 +22,7 @@ export const queueManagementService = {
             position: position,
             ticket_number: ticketNumber,
         });
-        await adjustPositions(customer.queue_id);
+        // await adjustPositions(customer.queue_id);
         //notify the customer
         return queueUser;
     },
@@ -58,6 +59,21 @@ export const queueManagementService = {
             throw new Error("Queue user id is required");
         }
         const updated = await queueRepository.markCustomerAsLate(id);
+        await adjustPositions(updated.queue_id);
+        return updated;
+    },
+
+    getLateCustomers: async (id: number) => {
+        const lateCustomers = await queueRepository.getLateCustomers(id);
+        return lateCustomers;
+    },
+
+    reinstateCustomer: async (id: number) => {
+        if (!id) {
+            throw new Error("Queue user id is required");
+        }
+        const updated = await queueRepository.reinstateCustomer(id);
+        await adjustPositions(updated.queue_id);
         return updated;
     },
 

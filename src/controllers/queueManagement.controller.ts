@@ -75,6 +75,31 @@ export const queueManagementController = {
         }
     },
 
+    getLateCustomers: async (req: Request, res: Response) => {
+        try {
+            const lateCustomers = await queueManagementService.getLateCustomers(parseInt(req.params.id));
+            return res.status(200).json(lateCustomers);
+        } catch (error) {
+            console.log(error);
+            const errorMessage = error instanceof Error ? error.message : "Internal server error";
+            return res.status(500).json({ message: errorMessage });
+        }
+    },
+
+    reinstateCustomer: async (req: Request, res: Response) => {
+        try {
+            await queueManagementService.reinstateCustomer(parseInt(req.params.id), req.body.position);
+            return res.status(200).json({ message: "Customer reinstated successfully" });
+        } catch (error) {
+            console.log(error);
+            const errorMessage = error instanceof Error ? error.message : "Internal server error";
+            if (errorMessage === "Queue user id is required") {
+                return res.status(404).json({ message: errorMessage });
+            }
+            return res.status(500).json({ message: errorMessage });
+        }
+    },
+
 
     
 }

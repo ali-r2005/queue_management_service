@@ -42,7 +42,7 @@ model QueueCustomer {
   id            Int             @id @default(autoincrement())
   queue_id      Int
   customer_id   Int
-  position      Int
+  position      Int?
   status        QueueCustomerStatus @default(waiting)
   ticket_number String
   late_at       DateTime?

@@ -93,9 +93,19 @@ export const queueRepository = {
     },
 
     markCustomerAsLate: async (id: number) => {
-        const latecomerQueue = await prisma.queueCustomer.update({ where: { id }, data: { status: "late" } });
+        const latecomerQueue = await prisma.queueCustomer.update({ where: { id }, data: { status: "late" , position: null } });
         return latecomerQueue;
-    }
+    },
+
+    getLateCustomers: async (id: number) => {
+        const lateCustomers = await prisma.queueCustomer.findMany({ where: { status: "late", queue_id: id } });
+        return lateCustomers;
+    },
+
+    reinstateCustomer: async (id: number) => {
+        const reinstatedCustomer = await prisma.queueCustomer.update({ where: { id }, data: { status: "waiting" } });
+        return reinstatedCustomer;
+    },
 
 
 }
