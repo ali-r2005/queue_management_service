@@ -9,6 +9,9 @@ export const queueControllerCrud = {
             res.status(200).json(queues);
         } catch (error: any) {
             const errorMessage = error instanceof Error ? error.message : "Failed to fetch queues";
+            if (errorMessage === "User not found") {
+                return res.status(404).json({ message: errorMessage });
+            }
             console.error(errorMessage);
             res.status(500).json({ error: errorMessage });
         }
@@ -21,6 +24,9 @@ export const queueControllerCrud = {
             res.status(201).json(newQueue);
         } catch (error: any) {
             const errorMessage = error instanceof Error ? error.message : "Failed to create queue";
+            if (errorMessage === "User not found") {
+                return res.status(404).json({ message: errorMessage });
+            }
             console.error(errorMessage);
             res.status(500).json({ error: errorMessage });
         }

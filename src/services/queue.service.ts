@@ -1,5 +1,5 @@
 import  { MyUserPayload } from "@/types/jwt";
-import { queueRepositoryCrud } from "../repositories/queue.repository";
+import { queueRepository } from "../repositories/queue.repository";
 import { CreateQueue, queue } from "@/types/queue";
 
 export const queueServiceCrud = {
@@ -8,25 +8,28 @@ export const queueServiceCrud = {
             throw new Error("User not found");
         }
         if (user.role === "business_owner") {
-            const queues = await queueRepositoryCrud.getQueuesByCondition({
+            const queues = await queueRepository.getQueuesByCondition({
                 where: {
-                    business_id: user.business_id
+                    business_id: user.business_id,
+                    status: "waiting" || "serving"
                 }
             });
             return queues;
         }
         if (user.role === "branch_manager") {
-            const queues = await queueRepositoryCrud.getQueuesByCondition({
+            const queues = await queueRepository.getQueuesByCondition({
                 where: {
-                    branch_id: user.branch_id
+                    branch_id: user.branch_id,
+                    status: "waiting" || "serving"
                 }
             });
             return queues;
         }
         if (user.role === "staff") {
-            const queues = await queueRepositoryCrud.getQueuesByCondition({
+            const queues = await queueRepository.getQueuesByCondition({
                 where: {
-                    user_id: user.id
+                    user_id: user.id,
+                    status: "waiting" || "serving"
                 }
             });
             return queues;
@@ -43,17 +46,17 @@ export const queueServiceCrud = {
             branch_id: user.branch_id,
             user_id: user.id
         }
-        const newQueue = await queueRepositoryCrud.createQueue(payload);
+        const newQueue = await queueRepository.createQueue(payload);
         return newQueue;
     },
     
     updateQueue : async (queueId: number, queue: queue) => {
-        const updatedQueue = await queueRepositoryCrud.updateQueue( queueId, queue);
+        const updatedQueue = await queueRepository.updateQueue( queueId, queue);
         return updatedQueue;
     },
     
     deleteQueue : async (queueId: number) => {
-        const deletedQueue = await queueRepositoryCrud.deleteQueue(queueId);
+        const deletedQueue = await queueRepository.deleteQueue(queueId);
         return deletedQueue;
     },
     

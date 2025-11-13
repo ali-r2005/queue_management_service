@@ -61,7 +61,19 @@ export const queueManagementController = {
         }
     },
 
-    
+    markCustomerAsLate: async (req: Request, res: Response) => {
+        try {
+            await queueManagementService.markCustomerAsLate(parseInt(req.params.id));
+            return res.status(200).json({ message: "Customer marked as late successfully" });
+        } catch (error) {
+            console.log(error);
+            const errorMessage = error instanceof Error ? error.message : "Internal server error";
+            if (errorMessage === "Queue user id is required") {
+                return res.status(404).json({ message: errorMessage });
+            }
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    },
 
 
     

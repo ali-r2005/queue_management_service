@@ -14,7 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum QueueUserStatus {
+enum QueueCustomerStatus {
   waiting
   late
   serving
@@ -31,20 +31,19 @@ model Queue {
   start_time     DateTime?
 
   // relations
-  queueUsers      QueueUser[]
+  queueCustomers      QueueCustomer[]
   servedCustomers ServedCustomer[]
-  latecomerQueues LatecomerQueue[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model QueueUser {
+model QueueCustomer {
   id            Int             @id @default(autoincrement())
   queue_id      Int
   customer_id   Int
   position      Int
-  status        QueueUserStatus @default(waiting)
+  status        QueueCustomerStatus @default(waiting)
   ticket_number String
   late_at       DateTime?
 
@@ -63,26 +62,6 @@ model ServedCustomer {
 
   // relation (local only)
   queue Queue @relation(fields: [queue_id], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model LatecomerQueue {
-  id        Int                 @id @default(autoincrement())
-  queue_id  Int
-  queue     Queue               @relation(fields: [queue_id], references: [id])
-  users     LatecomerQueueUser[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model LatecomerQueueUser {
-  id                 Int              @id @default(autoincrement())
-  customer_id            Int
-  latecomerQueue_id  Int
-  latecomerQueue     LatecomerQueue   @relation(fields: [latecomerQueue_id], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

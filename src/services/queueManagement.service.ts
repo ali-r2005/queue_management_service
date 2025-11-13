@@ -53,5 +53,13 @@ export const queueManagementService = {
         return updated;
     },
 
+    markCustomerAsLate: async (id: number) => {
+        if (!id) {
+            throw new Error("Queue user id is required");
+        }
+        const updated = await queueRepository.markCustomerAsLate(id);
+        return updated;
+    },
+
     
 }

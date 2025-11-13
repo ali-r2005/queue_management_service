@@ -34,7 +34,7 @@ async function main() {
   });
 
   // Add users to the queues
-  await prisma.queueUser.createMany({
+  await prisma.queueCustomer.createMany({
     data: [
       {
         queue_id: queue1.id,
@@ -59,20 +59,6 @@ async function main() {
       queue_id: queue1.id,
       customer_id: 5,
       waiting_time: 120, // seconds
-    },
-  });
-
-  // Example latecomer queue + user
-  const lateQueue = await prisma.latecomerQueue.create({
-    data: {
-      queue_id: queue2.id,
-    },
-  });
-
-  await prisma.latecomerQueueUser.create({
-    data: {
-      latecomerQueue_id: lateQueue.id,
-      customer_id: 67,
     },
   });
 

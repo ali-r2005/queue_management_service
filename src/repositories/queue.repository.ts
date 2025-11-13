@@ -32,32 +32,32 @@ export const queueRepository = {
     },
 
     getFirstQueueUserByCondition : async (condition: any) => {
-        const queueUser = await prisma.queueUser.findFirst(condition);
+        const queueUser = await prisma.queueCustomer.findFirst(condition);
         return queueUser;
     },
 
     createQueueUser : async (queueUser: CreateQueueUser) => {
-        const newQueueUser = await prisma.queueUser.create({ data: queueUser });
+        const newQueueUser = await prisma.queueCustomer.create({ data: queueUser });
         return newQueueUser;
     },
 
     getCustomersQueue : async (queue_id: number) => {
-        const queueUser = await prisma.queueUser.findMany({ where: { queue_id: queue_id } });
+        const queueUser = await prisma.queueCustomer.findMany({ where: { queue_id: queue_id } });
         return queueUser;
     },
 
     removeCustomerFromQueue : async (id: number) => {
-        const removedCustomer = await prisma.queueUser.delete({ where: { id: id } });
+        const removedCustomer = await prisma.queueCustomer.delete({ where: { id: id } });
         return removedCustomer;
     },
 
     moveCustomerToPosition: async (id: number, newPosition: number) => {
-        const user = await prisma.queueUser.findUnique({ where: { id } });
+        const user = await prisma.queueCustomer.findUnique({ where: { id } });
         if (!user) {
             throw new Error("Queue user not found");
         }
         const queueId = user.queue_id;
-        const total = await prisma.queueUser.count({ where: { queue_id: queueId } });
+        const total = await prisma.queueCustomer.count({ where: { queue_id: queueId } });
 
         if (newPosition < 1) newPosition = 1;
         if (newPosition > total) newPosition = total;
@@ -69,14 +69,14 @@ export const queueRepository = {
         const ops = [] as any[];
         if (newPosition < user.position) {
             ops.push(
-                prisma.queueUser.updateMany({
+                prisma.queueCustomer.updateMany({
                     where: { queue_id: queueId, position: { gte: newPosition, lt: user.position } },
                     data: { position: { increment: 1 } },
                 })
             );
         } else {
             ops.push(
-                prisma.queueUser.updateMany({
+                prisma.queueCustomer.updateMany({
                     where: { queue_id: queueId, position: { lte: newPosition, gt: user.position } },
                     data: { position: { decrement: 1 } },
                 })
@@ -84,12 +84,17 @@ export const queueRepository = {
         }
 
         ops.push(
-            prisma.queueUser.update({ where: { id }, data: { position: newPosition } })
+            prisma.queueCustomer.update({ where: { id }, data: { position: newPosition } })
         );
 
         const results = await prisma.$transaction(ops);
         const updated = results[results.length - 1];
         return updated;
+    },
+
+    markCustomerAsLate: async (id: number) => {
+        const latecomerQueue = await prisma.queueCustomer.update({ where: { id }, data: { status: "late" } });
+        return latecomerQueue;
     }
 
 
