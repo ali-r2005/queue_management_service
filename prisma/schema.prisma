@@ -28,6 +28,7 @@ model Queue {
   name           String
   scheduled_date DateTime?
   is_active      Boolean          @default(false)
+  is_paused      Boolean          @default(true)
   start_time     DateTime?
 
   // relations

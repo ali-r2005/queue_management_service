@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { queueManagementService } from "../services/queueManagement.service";
-import { AddCustomerToQueue } from "../types/queue";
 
 export const queueManagementController = {
     addCustomerToQueue: async (req: Request, res: Response) => {

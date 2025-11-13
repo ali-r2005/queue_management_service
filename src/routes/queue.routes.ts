@@ -12,7 +12,7 @@ router.delete("/:id", queueControllerCrud.deleteQueue);
 
 //MANAGEMENT
 router.post("/add-customer", queueManagementController.addCustomerToQueue);
-router.get("/user-queue", queueManagementController.getCustomersQueue);
+router.get("/customers-queue", queueManagementController.getCustomersQueue);
 router.delete("/remove-customer/:id", queueManagementController.removeCustomerFromQueue);
 router.put("/move-customer/:id", queueManagementController.moveCustomerToPosition);
 router.put("/mark-customer-as-late/:id", queueManagementController.markCustomerAsLate);
