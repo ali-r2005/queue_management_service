@@ -23,4 +23,10 @@ export type CreateQueueUser = {
     ticket_number: string;
     late_at?: Date | string;
 }
+
+export type CreateServedCustomer = {
+    queue_id: number;
+    customer_id: number;
+    waiting_time: number;
+}
     

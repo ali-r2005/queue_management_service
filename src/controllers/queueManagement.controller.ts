@@ -89,11 +89,39 @@ export const queueManagementController = {
     reinstateCustomer: async (req: Request, res: Response) => {
         try {
             await queueManagementService.reinstateCustomer(parseInt(req.params.id), req.body.position);
-            return res.status(200).json({ message: "Customer reinstated successfully" });
+            return res.status(200).json({ message: "Customer reinstated successfully on position " + req.body.position });
         } catch (error) {
             console.log(error);
             const errorMessage = error instanceof Error ? error.message : "Internal server error";
             if (errorMessage === "Queue user id is required") {
+                return res.status(404).json({ message: errorMessage });
+            }
+            return res.status(500).json({ message: errorMessage });
+        }
+    },
+
+    serveCustomer: async (req: Request, res: Response) => {
+        try {
+            await queueManagementService.serveCustomer(parseInt(req.params.id));
+            return res.status(200).json({ message: "Customer is being served" });
+        } catch (error) {
+            console.log(error);
+            const errorMessage = error instanceof Error ? error.message : "Internal server error";
+            if (errorMessage === "Queue user id is required") {
+                return res.status(404).json({ message: errorMessage });
+            }
+            return res.status(500).json({ message: errorMessage });
+        }
+    },
+
+    servedCustomer: async (req: Request, res: Response) => {
+        try {
+            await queueManagementService.servedCustomer(parseInt(req.params.id));
+            return res.status(200).json({ message: "Customer served successfully" });
+        } catch (error) {
+            console.log(error);
+            const errorMessage = error instanceof Error ? error.message : "Internal server error";
+            if (errorMessage === "Queue user id is required" || errorMessage === "Customer has not been served yet. 'served_at' is missing.") {
                 return res.status(404).json({ message: errorMessage });
             }
             return res.status(500).json({ message: errorMessage });

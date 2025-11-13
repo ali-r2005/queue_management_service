@@ -46,6 +46,7 @@ model QueueCustomer {
   status        QueueCustomerStatus @default(waiting)
   ticket_number String
   late_at       DateTime?
+  served_at     DateTime?
 
   // relation (local only)
   queue Queue @relation(fields: [queue_id], references: [id])

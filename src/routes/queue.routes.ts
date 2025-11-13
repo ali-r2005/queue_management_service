@@ -17,5 +17,8 @@ router.delete("/remove-customer/:id", queueManagementController.removeCustomerFr
 router.put("/move-customer/:id", queueManagementController.moveCustomerToPosition);
 router.put("/mark-customer-as-late/:id", queueManagementController.markCustomerAsLate);
 router.get("/late-customers/:id", queueManagementController.getLateCustomers);
+router.put("/reinstate-customer/:id", queueManagementController.reinstateCustomer);
+router.put("/serve-customer/:id", queueManagementController.serveCustomer);
+router.put("/served-customer/:id", queueManagementController.servedCustomer);
 
 export default router;

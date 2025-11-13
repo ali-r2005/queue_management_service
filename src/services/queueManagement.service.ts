@@ -22,7 +22,7 @@ export const queueManagementService = {
             position: position,
             ticket_number: ticketNumber,
         });
-        // await adjustPositions(customer.queue_id);
+        await adjustPositions(customer.queue_id);
         //notify the customer
         return queueUser;
     },
@@ -58,7 +58,7 @@ export const queueManagementService = {
         if (!id) {
             throw new Error("Queue user id is required");
         }
-        const updated = await queueRepository.markCustomerAsLate(id);
+        const updated = await queueRepository.updateQueueCustomer({ where: { id }, data: { status: "late", late_at: new Date() } });
         await adjustPositions(updated.queue_id);
         return updated;
     },
@@ -68,13 +68,42 @@ export const queueManagementService = {
         return lateCustomers;
     },
 
-    reinstateCustomer: async (id: number) => {
+    reinstateCustomer: async (id: number, position: number) => {
         if (!id) {
             throw new Error("Queue user id is required");
         }
-        const updated = await queueRepository.reinstateCustomer(id);
-        await adjustPositions(updated.queue_id);
-        return updated;
+        await queueRepository.updateQueueCustomer({ where: { id }, data: { status: "waiting" } });
+        queueRepository.moveCustomerToPosition(id, position);
+    },
+
+    serveCustomer: async (id: number) => {
+        if (!id) {
+            throw new Error("Queue user id is required");
+        }
+        await queueRepository.updateQueueCustomer({ where: { id }, data: { status: "serving", served_at: new Date() } });
+    },
+
+    servedCustomer: async (id: number) => {
+        if (!id) {
+            throw new Error("Queue user id is required");
+        }
+        const customer = await queueRepository.deleteCustomerFromQueue(id);
+
+        if (!customer.served_at) {
+            throw new Error("Customer has not been served yet. 'served_at' is missing.");
+        }
+       
+        await adjustPositions(customer.queue_id);
+
+        const servedAtTime = new Date(customer.served_at).getTime();
+        const now = Date.now();
+        const timeServedInSeconds = Math.round((now - servedAtTime) / 1000);
+
+        await queueRepository.createServedCustomer({
+            queue_id: customer.queue_id,
+            customer_id: customer.customer_id,
+            waiting_time: timeServedInSeconds
+        });
     },
 
     

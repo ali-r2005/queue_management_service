@@ -1,5 +1,5 @@
 import prisma from "@/config/prismaClient";
-import { CreateQueue, queue, CreateQueueUser } from "@/types/queue";
+import { CreateQueue, queue, CreateQueueUser, CreateServedCustomer } from "@/types/queue";
 
 export const queueRepository = {  
     getQueuesByCondition : async (condition: any) => {
@@ -67,7 +67,16 @@ export const queueRepository = {
         }
 
         const ops = [] as any[];
-        if (newPosition < user.position) {
+        if (!user.position){
+            console.log("user position is null");
+            ops.push(
+                prisma.queueCustomer.updateMany({
+                    where: { queue_id: queueId, position: {gte: newPosition } },
+                    data: { position: { increment: 1 } },
+                })
+            );          
+        }
+        else if (newPosition < user.position) {
             ops.push(
                 prisma.queueCustomer.updateMany({
                     where: { queue_id: queueId, position: { gte: newPosition, lt: user.position } },
@@ -92,9 +101,9 @@ export const queueRepository = {
         return updated;
     },
 
-    markCustomerAsLate: async (id: number) => {
-        const latecomerQueue = await prisma.queueCustomer.update({ where: { id }, data: { status: "late" , position: null } });
-        return latecomerQueue;
+    updateQueueCustomer: async (condition: any) => {
+        const updated = await prisma.queueCustomer.update(condition);
+        return updated;
     },
 
     getLateCustomers: async (id: number) => {
@@ -102,10 +111,14 @@ export const queueRepository = {
         return lateCustomers;
     },
 
-    reinstateCustomer: async (id: number) => {
-        const reinstatedCustomer = await prisma.queueCustomer.update({ where: { id }, data: { status: "waiting" } });
-        return reinstatedCustomer;
+    deleteCustomerFromQueue: async (id: number) => {
+        const deletedCustomer = await prisma.queueCustomer.delete({ where: { id: id } });
+        return deletedCustomer ;
     },
 
+    createServedCustomer: async (servedCustomer: CreateServedCustomer) => {
+        await prisma.servedCustomer.create({ data: servedCustomer });
+    },
 
+    
 }
